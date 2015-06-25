@@ -10,16 +10,16 @@ CFLAGS  = -mcpu=cortex-m4 -march=armv7e-m -mthumb
 CFLAGS += -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c99 -O2
 CFLAGS += -ffunction-sections -fdata-sections -g -T "lib/linker.ld" -Xlinker
 CFLAGS += --gc-sections -Wl,-Map,$(PROJECT).map --specs=rdimon.specs
-CFLAGS += -lc -lrdimon
+CFLAGS += -lc -lrdimon -I"include" -I"lib" -I"lib/CMSIS/core"
+CFLAGS += -I"lib/CMSIS/device" -I"lib/HAL/include"
+CFLAGS += -DSTM32F303xE -DNUCLEO_F303RE -DUSE_HAL_DRIVER -DSTM32F303RETx
 
-DEFS = -DSTM32F303xE -DNUCLEO_F303RE -DUSE_HAL_DRIVER -DSTM32F303RETx
-INCS = -I"inc" -I"lib" -I"lib/CMSIS/core" -I"lib/CMSIS/device" -I"lib/HAL/inc"
 FILE_BUILD = -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c
 STARTUP = lib/startup_stm32f303xe.s
 
 %.o: %.c
 	@echo 'Building file: $<'
-	arm-none-eabi-gcc $(CFLAGS) $(INCS) $(DEFS) $(FILE_BUILD) -o "$@" "$<"
+	arm-none-eabi-gcc $(CFLAGS) $(FILE_BUILD) -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
